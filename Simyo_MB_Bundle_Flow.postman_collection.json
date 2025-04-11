@@ -1,0 +1,266 @@
+{
+	"info": {
+		"_postman_id": "5c1a5712-032c-4c17-b1e7-1dcf2041e664",
+		"name": "Simyo_MB_Bundle_Flow",
+		"description": "Simulated Postman flow for Simyo MB bundle purchase",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41090397"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var session_token = pm.response.json().result.sessionToken;",
+							"pm.environment.set(\"session_token\",session_token);",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Client-Platform",
+						"value": "mijn",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"phoneNumber\": \"0683570897\",\n    \"password\": \"1234\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}sessions",
+					"host": [
+						"{{base_url}}sessions"
+					]
+				},
+				"description": "Generated from cURL: curl 'https://appapi.simyo.nl/webapi/api/v1/sessions' \\\n  -H 'Accept: application/json' \\\n  -H 'Accept-Language: en-US,enq=0.9' \\\n  -H 'Cache-Control: no-cache' \\\n  -H 'Connection: keep-alive' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Origin: https://mijn.simyo.nl' \\\n  -H 'Referer: https://mijn.simyo.nl/' \\\n  -H 'Sec-Fetch-Dest: empty' \\\n  -H 'Sec-Fetch-Mode: cors' \\\n  -H 'Sec-Fetch-Site: same-site' \\\n  -H 'Sec-GPC: 1' \\\n  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' \\\n  -H 'X-Client-Platform: mijn' \\\n  -H 'X-Client-Token: e77b7e2f43db41bb95b17a2a11581a38' \\\n  -H 'X-Client-Version: 9.0.0' \\\n  -H 'sec-ch-ua: \"Brave\";v=\"131\", \"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24\"' \\\n  -H 'sec-ch-ua-mobile: ?0' \\\n  -H 'sec-ch-ua-platform: \"macOS\"' \\\n  --data-raw '{\"phoneNumber\":\"0683570897\",\"password\":\"1234\"}'"
+			},
+			"response": []
+		},
+		{
+			"name": "Current",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const response = pm.response.json();",
+							"",
+							"let totalCost = response.result.categories[0].total;",
+							"// totalCost = totalCost.toFixed(2);",
+							"console.log(totalCost.toFixed(2));",
+							"",
+							"pm.environment.set(\"totalCost\", totalCost.toFixed(2));",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Client-Platform",
+						"value": "mijn"
+					},
+					{
+						"key": "X-Session-Token",
+						"value": "{{session_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}invoices/postpaid/current",
+					"host": [
+						"{{base_url}}invoices"
+					],
+					"path": [
+						"postpaid",
+						"current"
+					]
+				},
+				"description": "Generated from cURL: curl 'https://appapi.simyo.nl/webapi/api/v1/invoices/postpaid/current' \\\n  -H 'Accept: application/json' \\\n  -H 'Accept-Language: en-US,enq=0.9' \\\n  -H 'Cache-Control: no-cache' \\\n  -H 'Connection: keep-alive' \\\n  -H 'Origin: https://mijn.simyo.nl' \\\n  -H 'Referer: https://mijn.simyo.nl/' \\\n  -H 'Sec-Fetch-Dest: empty' \\\n  -H 'Sec-Fetch-Mode: cors' \\\n  -H 'Sec-Fetch-Site: same-site' \\\n  -H 'Sec-GPC: 1' \\\n  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' \\\n  -H 'X-Client-Platform: mijn' \\\n  -H 'X-Client-Token: e77b7e2f43db41bb95b17a2a11581a38' \\\n  -H 'X-Client-Version: 9.0.0' \\\n  -H 'X-Session-Token: 23f5e5c9-98f7-694c-614f-67ad24b43e74' \\\n  -H 'sec-ch-ua: \"Brave\";v=\"131\", \"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24\"' \\\n  -H 'sec-ch-ua-mobile: ?0' \\\n  -H 'sec-ch-ua-platform: \"macOS\"'"
+			},
+			"response": []
+		},
+		{
+			"name": "Topup",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// This is a performance issue of the backend services",
+							"// Needed to wait 40 seconds to perform update services",
+							"setTimeout(function(){},40000);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "X-Client-Platform",
+						"value": "mijn"
+					},
+					{
+						"key": "X-Session-Token",
+						"value": "{{session_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"bundleId\": \"201505200829345604\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}subscription/postpaid/topup",
+					"host": [
+						"{{base_url}}subscription"
+					],
+					"path": [
+						"postpaid",
+						"topup"
+					]
+				},
+				"description": "Generated from cURL: curl 'https://appapi.simyo.nl/webapi/api/v1/subscription/postpaid/topup' \\\n  -X 'PUT' \\\n  -H 'Accept: application/json' \\\n  -H 'Accept-Language: en-US,enq=0.9' \\\n  -H 'Cache-Control: no-cache' \\\n  -H 'Connection: keep-alive' \\\n  -H 'Content-Type: application/json' \\\n  -H 'Origin: https://mijn.simyo.nl' \\\n  -H 'Referer: https://mijn.simyo.nl/' \\\n  -H 'Sec-Fetch-Dest: empty' \\\n  -H 'Sec-Fetch-Mode: cors' \\\n  -H 'Sec-Fetch-Site: same-site' \\\n  -H 'Sec-GPC: 1' \\\n  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' \\\n  -H 'X-Client-Platform: mijn' \\\n  -H 'X-Client-Token: e77b7e2f43db41bb95b17a2a11581a38' \\\n  -H 'X-Client-Version: 9.0.0' \\\n  -H 'X-Session-Token: 23f5e5c9-98f7-694c-614f-67ad24b43e74' \\\n  -H 'sec-ch-ua: \"Brave\";v=\"131\", \"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24\"' \\\n  -H 'sec-ch-ua-mobile: ?0' \\\n  -H 'sec-ch-ua-platform: \"macOS\"' \\\n  --data-raw '{\"bundleId\":\"201505200829345604\"}'"
+			},
+			"response": []
+		},
+		{
+			"name": "PostPaid",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const response = pm.response.json();",
+							"",
+							"let totalCost = response.result.currentCosts.totalCost;",
+							"console.log('total cost :',totalCost.toFixed(2));",
+							"",
+							"let getTotalCost = pm.environment.get(\"totalCost\");",
+							"let previousTotalCost = parseFloat(getTotalCost).toFixed(2);",
+							"console.log('previous total cost', previousTotalCost);",
+							"",
+							"pm.test(\"Verify purchase extra MB bundel\", function () {",
+							"    console.log(totalCost - previousTotalCost);",
+							"",
+							"    if((totalCost - previousTotalCost) == 5){",
+							"        console.log(\"Purchase extra MB bundel scenario passed!\")",
+							"    }else{",
+							"        pm.expect.fail(\"Purchase extra MB bundel scenario failed!\");",
+							"}",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Client-Platform",
+						"value": "mijn"
+					},
+					{
+						"key": "X-Session-Token",
+						"value": "{{session_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}overview/postpaid",
+					"host": [
+						"{{base_url}}overview"
+					],
+					"path": [
+						"postpaid"
+					]
+				},
+				"description": "Generated from cURL: curl 'https://appapi.simyo.nl/webapi/api/v1/overview/postpaid' \\\n  -H 'Accept: application/json' \\\n  -H 'Accept-Language: en-US,enq=0.9' \\\n  -H 'Cache-Control: no-cache' \\\n  -H 'Connection: keep-alive' \\\n  -H 'Origin: https://mijn.simyo.nl' \\\n  -H 'Referer: https://mijn.simyo.nl/' \\\n  -H 'Sec-Fetch-Dest: empty' \\\n  -H 'Sec-Fetch-Mode: cors' \\\n  -H 'Sec-Fetch-Site: same-site' \\\n  -H 'Sec-GPC: 1' \\\n  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' \\\n  -H 'X-Client-Platform: mijn' \\\n  -H 'X-Client-Token: e77b7e2f43db41bb95b17a2a11581a38' \\\n  -H 'X-Client-Version: 9.0.0' \\\n  -H 'X-Session-Token: cf06f56e-b9ca-a866-837a-d2e124f23635' \\\n  -H 'sec-ch-ua: \"Brave\";v=\"131\", \"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24\"' \\\n  -H 'sec-ch-ua-mobile: ?0' \\\n  -H 'sec-ch-ua-platform: \"macOS\"'"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

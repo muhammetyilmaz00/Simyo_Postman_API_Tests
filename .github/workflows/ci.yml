@@ -1,0 +1,47 @@
+name: Run Postman Tests with Newman
+
+on:
+  # Trigger the workflow on push or pull request to the main branch
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      # Step 3: Install Newman and HTML Reporter
+      - name: Install Newman and HTML Reporter
+        run: |
+          npm install -g newman
+          npm install -g newman-reporter-htmlextra
+
+      # Step 4: Run Postman Collection
+      - name: Run Simyo API Test
+        run: newman run Simyo_MB_Bundle_Flow.postman_collection.json -e Simyo_Environment_Variables.postman_environment.json -r cli,htmlextra --reporter-htmlextra-export Simyo_Postman_API_Tests.html
+
+      # Step 5: Upload the HTML report as an artifact
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Simyo_Postman_API_Tests
+          path: Simyo_Postman_API_Tests.html
+      
